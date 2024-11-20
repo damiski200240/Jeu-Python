@@ -1,7 +1,7 @@
 import pygame
 import random
 
-from unit import *
+from character import *
 
 
 class Game:
