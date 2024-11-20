@@ -1,4 +1,4 @@
- import pygame
+import pygame
 import random
 
 # Constantes
@@ -15,36 +15,8 @@ GREEN = (0, 255, 0)
 
 
 class Unit:
-    """
-    Classe pour représenter une unité.
 
-    ...
-    Attributs
-    ---------
-    x : int
-        La position x de l'unité sur la grille.
-    y : int
-        La position y de l'unité sur la grille.
-    health : int
-        La santé de l'unité.
-    attack_power : int
-        La puissance d'attaque de l'unité.
-    team : str
-        L'équipe de l'unité ('player' ou 'enemy').
-    is_selected : bool
-        Si l'unité est sélectionnée ou non.
-
-    Méthodes
-    --------
-    move(dx, dy)
-        Déplace l'unité de dx, dy.
-    attack(target)
-        Attaque une unité cible.
-    draw(screen)
-        Dessine l'unité sur la grille.
-    """
-
-    def __init__(self, x, y, health, attack_power, team):
+    def __init__(self, x, y, health, attack_power, speed, defense, team):
         """
         Construit une unité avec une position, une santé, une puissance d'attaque et une équipe.
 
@@ -65,6 +37,8 @@ class Unit:
         self.y = y
         self.health = health
         self.attack_power = attack_power
+        self.speed = speed
+        self.defense = defense
         self.team = team  # 'player' ou 'enemy'
         self.is_selected = False
 
@@ -87,3 +61,37 @@ class Unit:
                              self.y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
         pygame.draw.circle(screen, color, (self.x * CELL_SIZE + CELL_SIZE //
                            2, self.y * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 3)
+        
+'''UNIT TYPE: The Archer.'''
+class Archer(Unit):
+    def __init__(self, x, y, health, attack_power, speed, defense, team):
+        super().__init__(x, y, health, attack_power, speed, defense, team)
+        self.range = 3 #Archer's attack range
+        self.dot_targets = {}  #Track units affected by fire arrow 
+         
+    def _in_range(self,target):
+        '''Checks if the target is within the attack range'''
+        return abs(self.x - target.x) <= self.range and abs(self.y - target.y)
+    
+    '''Abilities'''    
+    def normal_arrow(self,target):
+        '''Deals direct damage to the target'''
+        if self._in_range(target):
+            target.health -= self.attack_power
+            
+    def fire_arrow(self, target):
+        '''Applies damage and sets up damage-over time effects'''
+        if self._in_range(target):
+            initial_damage = self.attack_power // 2
+            dot_damage = self.attack_power // 4
+            target.health -= initial_damage
+            self.dot_targets[target] = {'damage': dot_damage, 'turns':3}
+            
+    def apply_dot(self):
+        '''Apply DoT to affected targets'''
+        for target, effect in list(self.dot_targets.items()):
+            if effect['turns'] > 0:
+                target.health -= effect['damage']
+                effect['turns'] -= 1
+            else:
+                del self.dot_targets[target]

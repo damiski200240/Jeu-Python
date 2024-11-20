@@ -29,11 +29,11 @@ class Game:
             La surface de la fenêtre du jeu.
         """
         self.screen = screen
-        self.player_units = [Unit(0, 0, 10, 2, 'player'),
-                             Unit(1, 0, 10, 2, 'player')]
+        self.player_units = [Unit(0, 0, 10, 2, 1,1, 'player'),
+                             Unit(1, 0, 10, 2, 1,1, 'player')]
 
-        self.enemy_units = [Unit(6, 6, 8, 1, 'enemy'),
-                            Unit(7, 6, 8, 1, 'enemy')]
+        self.enemy_units = [Unit(6, 6, 8, 1, 1,1, 'enemy'),
+                            Unit(7, 6, 8, 1,1,1, 'enemy')]
 
     def handle_player_turn(self):
         """Tour du joueur"""
@@ -43,6 +43,7 @@ class Game:
             has_acted = False
             selected_unit.is_selected = True
             self.flip_display()
+            
             while not has_acted:
 
                 # Important: cette boucle permet de gérer les événements Pygame
@@ -52,7 +53,7 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         exit()
-
+                        
                     # Gestion des touches du clavier
                     if event.type == pygame.KEYDOWN:
 
