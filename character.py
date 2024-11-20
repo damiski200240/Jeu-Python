@@ -16,7 +16,7 @@ GREEN = (0, 255, 0)
 
 class Unit:
 
-    def __init__(self, x, y, health, attack_power, speed, defense, team):
+    def __init__(self, x, y, health, attack, defense, speed, vision, image_path, team):
         """
         Construit une unité avec une position, une santé, une puissance d'attaque et une équipe.
 
@@ -36,10 +36,13 @@ class Unit:
         self.x = x
         self.y = y
         self.health = health
-        self.attack_power = attack_power
-        self.speed = speed
+        self.attack_power = attack
         self.defense = defense
-        self.team = team  # 'player' ou 'enemy'
+        self.speed = speed
+        self.vision = vision
+        self.image = pygame.image.load(image_path)  # Load character's image
+        self.image = pygame.transform.scale(self.image, (CELL_SIZE, CELL_SIZE))  # Scale to fit a tile
+        self.team = team  # 'player' or 'enemy'
         self.is_selected = False
 
     def move(self, dx, dy):
@@ -54,13 +57,29 @@ class Unit:
             target.health -= self.attack_power
 
     def draw(self, screen):
-        """Affiche l'unité sur l'écran."""
-        color = BLUE if self.team == 'player' else RED
-        if self.is_selected:
-            pygame.draw.rect(screen, GREEN, (self.x * CELL_SIZE,
-                             self.y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-        pygame.draw.circle(screen, color, (self.x * CELL_SIZE + CELL_SIZE //
-                           2, self.y * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 3)
+        # If an image is loaded, blit it onto the screen at the unit's grid position
+        if self.image:
+            screen.blit(self.image, (self.x * CELL_SIZE, self.y * CELL_SIZE))
+        else:
+            # Fallback: If no image is loaded, draw a colored rectangle as a placeholder
+            color = BLUE if self.team == 'player' else RED
+            pygame.draw.rect(screen, color, (self.x * CELL_SIZE, self.y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+        
+    def draw_healthbar(self, screen, health):
+        """Dessine une barre de santé au-dessus de la cellule de l'unité."""
+        # Dimensions et position de la barre de santé
+        bar_width = CELL_SIZE  # Largeur de la cellule
+        bar_height = 5         # Hauteur de la barre de santé
+        bar_x = self.x * CELL_SIZE  # Position X (alignée avec la cellule)
+        bar_y = self.y * CELL_SIZE - bar_height - 2  # Position Y (au-dessus de la cellule)
+
+        # Barre rouge (fond - santé maximale)
+        pygame.draw.rect(screen, RED, (bar_x, bar_y, bar_width, bar_height))
+
+        # Barre verte (santé actuelle)
+        pygame.draw.rect(screen, GREEN, (bar_x, bar_y, bar_width * (health / 100), bar_height))
+        
+  
         
 '''UNIT TYPE: The Archer.'''
 class Archer(Unit):
@@ -95,3 +114,7 @@ class Archer(Unit):
                 effect['turns'] -= 1
             else:
                 del self.dot_targets[target]
+=======
+
+
+       
