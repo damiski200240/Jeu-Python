@@ -91,3 +91,19 @@ class Unit:
                              self.y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
         pygame.draw.circle(screen, color, (self.x * CELL_SIZE + CELL_SIZE //
                            2, self.y * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 3)
+        
+    def draw_healthbar(self, screen, health):
+        """Dessine une barre de santé au-dessus de la cellule de l'unité."""
+        # Dimensions et position de la barre de santé
+        bar_width = CELL_SIZE  # Largeur de la cellule
+        bar_height = 5         # Hauteur de la barre de santé
+        bar_x = self.x * CELL_SIZE  # Position X (alignée avec la cellule)
+        bar_y = self.y * CELL_SIZE - bar_height - 2  # Position Y (au-dessus de la cellule)
+
+        # Barre rouge (fond - santé maximale)
+        pygame.draw.rect(screen, RED, (bar_x, bar_y, bar_width, bar_height))
+
+        # Barre verte (santé actuelle)
+        pygame.draw.rect(screen, GREEN, (bar_x, bar_y, bar_width * (health / 100), bar_height))
+
+

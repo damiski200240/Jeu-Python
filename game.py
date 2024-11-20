@@ -29,11 +29,17 @@ class Game:
             La surface de la fenêtre du jeu.
         """
         self.screen = screen
-        self.player_units = [Unit(0, 0, 10, 2, 'player'),
-                             Unit(1, 0, 10, 2, 'player')]
 
-        self.enemy_units = [Unit(6, 6, 8, 1, 'enemy'),
-                            Unit(7, 6, 8, 1, 'enemy')]
+        # Mise à jour des unités pour correspondre au constructeur Unit étendu
+        self.player_units = [
+            Unit(0, 0, 100, 10, 5, 3, 3, None, 'player'),
+            Unit(1, 0, 100, 10, 5, 3, 3, None, 'player')
+        ]
+
+        self.enemy_units = [
+            Unit(6, 6, 100, 8, 4, 2, 3, None, 'enemy'),
+            Unit(7, 6, 100, 8, 4, 2, 3, None, 'enemy')
+        ]
 
     def handle_player_turn(self):
         """Tour du joueur"""
@@ -107,9 +113,10 @@ class Game:
                 rect = pygame.Rect(x, y, CELL_SIZE, CELL_SIZE)
                 pygame.draw.rect(self.screen, WHITE, rect, 1)
 
-        # Affiche les unités
+        # Affiche les unités et leurs barres de santé
         for unit in self.player_units + self.enemy_units:
-            unit.draw(self.screen)
+            unit.draw(self.screen)  # Dessine l'unité
+            unit.draw_healthbar(self.screen, unit.health)  # Dessine la barre de santé
 
         # Rafraîchit l'écran
         pygame.display.flip()
