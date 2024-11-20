@@ -68,7 +68,9 @@ class Unit:
         self.defense = defense
         self.speed = speed
         self.vision = vision
-        self.image_path = image_path
+        self.image = image_path
+        self.image = pygame.image.load(image_path)  # Load character's image
+        self.image = pygame.transform.scale(self.image, (CELL_SIZE, CELL_SIZE))  # Scale to fit a tile
         self.team = team  # 'player' ou 'enemy'
         self.is_selected = False
 
@@ -85,12 +87,14 @@ class Unit:
 
     def draw(self, screen):
         """Affiche l'unité sur l'écran."""
-        color = BLUE if self.team == 'player' else RED
-        if self.is_selected:
-            pygame.draw.rect(screen, GREEN, (self.x * CELL_SIZE,
-                             self.y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-        pygame.draw.circle(screen, color, (self.x * CELL_SIZE + CELL_SIZE //
-                           2, self.y * CELL_SIZE + CELL_SIZE // 2), CELL_SIZE // 3)
+        # If an image is loaded, blit it onto the screen at the unit's grid position
+        if self.image:
+            screen.blit(self.image, (self.x * CELL_SIZE, self.y * CELL_SIZE))
+        else:
+            # Fallback: If no image is loaded, draw a colored rectangle as a placeholder
+            color = BLUE if self.team == 'player' else RED
+            pygame.draw.rect(screen, color, (self.x * CELL_SIZE, self.y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
+
         
     def draw_healthbar(self, screen, health):
         """Dessine une barre de santé au-dessus de la cellule de l'unité."""

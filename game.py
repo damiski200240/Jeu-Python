@@ -32,13 +32,13 @@ class Game:
 
         # Mise à jour des unités pour correspondre au constructeur Unit étendu
         self.player_units = [
-            Unit(0, 0, 100, 10, 5, 3, 3, None, 'player'),
-            Unit(1, 0, 100, 10, 5, 3, 3, None, 'player')
+            Unit(0, 0, 100, 8, 4, 2, 3, "archer.png", "enemy"),
+            Unit(1, 0, 100, 8, 4, 2, 3, "giant.png", "enemy")
         ]
 
         self.enemy_units = [
-            Unit(6, 6, 100, 8, 4, 2, 3, None, 'enemy'),
-            Unit(7, 6, 100, 8, 4, 2, 3, None, 'enemy')
+            Unit(6, 6, 100, 8, 4, 2, 3, "enemy_archer.png", "enemy"),
+            Unit(7, 6, 100, 8, 4, 2, 3, "enemy_giant.png", "enemy")
         ]
 
     def handle_player_turn(self):
