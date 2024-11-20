@@ -1,4 +1,4 @@
- import pygame
+import pygame
 import random
 
 # Constantes
@@ -44,7 +44,7 @@ class Unit:
         Dessine l'unité sur la grille.
     """
 
-    def __init__(self, x, y, health, attack_power, team):
+    def __init__(self, x, y, health, attack, defense, speed, vision, image_path, team):
         """
         Construit une unité avec une position, une santé, une puissance d'attaque et une équipe.
 
@@ -64,7 +64,11 @@ class Unit:
         self.x = x
         self.y = y
         self.health = health
-        self.attack_power = attack_power
+        self.attack_power = attack
+        self.defense = defense
+        self.speed = speed
+        self.vision = vision
+        self.image_path = image_path
         self.team = team  # 'player' ou 'enemy'
         self.is_selected = False
 
