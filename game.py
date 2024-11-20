@@ -29,7 +29,6 @@ class Game:
             La surface de la fenêtre du jeu.
         """
         self.screen = screen
-
         # Mise à jour des unités pour correspondre au constructeur Unit étendu
         self.player_units = [
             Unit(0, 0, 100, 8, 4, 2, 3, "archer.png", "enemy"),
@@ -49,6 +48,7 @@ class Game:
             has_acted = False
             selected_unit.is_selected = True
             self.flip_display()
+            
             while not has_acted:
 
                 # Important: cette boucle permet de gérer les événements Pygame
@@ -58,7 +58,7 @@ class Game:
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         exit()
-
+                        
                     # Gestion des touches du clavier
                     if event.type == pygame.KEYDOWN:
 

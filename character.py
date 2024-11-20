@@ -15,34 +15,6 @@ GREEN = (0, 255, 0)
 
 
 class Unit:
-    """
-    Classe pour représenter une unité.
-
-    ...
-    Attributs
-    ---------
-    x : int
-        La position x de l'unité sur la grille.
-    y : int
-        La position y de l'unité sur la grille.
-    health : int
-        La santé de l'unité.
-    attack_power : int
-        La puissance d'attaque de l'unité.
-    team : str
-        L'équipe de l'unité ('player' ou 'enemy').
-    is_selected : bool
-        Si l'unité est sélectionnée ou non.
-
-    Méthodes
-    --------
-    move(dx, dy)
-        Déplace l'unité de dx, dy.
-    attack(target)
-        Attaque une unité cible.
-    draw(screen)
-        Dessine l'unité sur la grille.
-    """
 
     def __init__(self, x, y, health, attack, defense, speed, vision, image_path, team):
         """
@@ -68,10 +40,9 @@ class Unit:
         self.defense = defense
         self.speed = speed
         self.vision = vision
-        self.image = image_path
         self.image = pygame.image.load(image_path)  # Load character's image
         self.image = pygame.transform.scale(self.image, (CELL_SIZE, CELL_SIZE))  # Scale to fit a tile
-        self.team = team  # 'player' ou 'enemy'
+        self.team = team  # 'player' or 'enemy'
         self.is_selected = False
 
     def move(self, dx, dy):
@@ -86,7 +57,6 @@ class Unit:
             target.health -= self.attack_power
 
     def draw(self, screen):
-        """Affiche l'unité sur l'écran."""
         # If an image is loaded, blit it onto the screen at the unit's grid position
         if self.image:
             screen.blit(self.image, (self.x * CELL_SIZE, self.y * CELL_SIZE))
@@ -94,7 +64,6 @@ class Unit:
             # Fallback: If no image is loaded, draw a colored rectangle as a placeholder
             color = BLUE if self.team == 'player' else RED
             pygame.draw.rect(screen, color, (self.x * CELL_SIZE, self.y * CELL_SIZE, CELL_SIZE, CELL_SIZE))
-
         
     def draw_healthbar(self, screen, health):
         """Dessine une barre de santé au-dessus de la cellule de l'unité."""
@@ -109,5 +78,43 @@ class Unit:
 
         # Barre verte (santé actuelle)
         pygame.draw.rect(screen, GREEN, (bar_x, bar_y, bar_width * (health / 100), bar_height))
+        
+  
+        
+'''UNIT TYPE: The Archer.'''
+class Archer(Unit):
+    def __init__(self, x, y, health, attack_power, speed, defense, team):
+        super().__init__(x, y, health, attack_power, speed, defense, team)
+        self.range = 3 #Archer's attack range
+        self.dot_targets = {}  #Track units affected by fire arrow 
+         
+    def _in_range(self,target):
+        '''Checks if the target is within the attack range'''
+        return abs(self.x - target.x) <= self.range and abs(self.y - target.y)
+    
+    '''Abilities'''    
+    def normal_arrow(self,target):
+        '''Deals direct damage to the target'''
+        if self._in_range(target):
+            target.health -= self.attack_power
+            
+    def fire_arrow(self, target):
+        '''Applies damage and sets up damage-over time effects'''
+        if self._in_range(target):
+            initial_damage = self.attack_power // 2
+            dot_damage = self.attack_power // 4
+            target.health -= initial_damage
+            self.dot_targets[target] = {'damage': dot_damage, 'turns':3}
+            
+    def apply_dot(self):
+        '''Apply DoT to affected targets'''
+        for target, effect in list(self.dot_targets.items()):
+            if effect['turns'] > 0:
+                target.health -= effect['damage']
+                effect['turns'] -= 1
+            else:
+                del self.dot_targets[target]
+=======
 
 
+       
