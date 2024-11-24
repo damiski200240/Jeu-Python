@@ -113,8 +113,4 @@ class Archer(Unit):
                 target.health -= effect['damage']
                 effect['turns'] -= 1
             else:
-                del self.dot_targets[target]
-=======
-
-
-       
+                del self.dot_targets[target]      
